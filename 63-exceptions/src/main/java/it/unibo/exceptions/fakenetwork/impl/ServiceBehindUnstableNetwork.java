@@ -1,6 +1,7 @@
 package it.unibo.exceptions.fakenetwork.impl;
 
 import it.unibo.exceptions.arithmetic.ArithmeticService;
+import it.unibo.exceptions.exceptions.NetworkException;
 import it.unibo.exceptions.fakenetwork.api.NetworkComponent;
 
 import java.io.IOException;
@@ -83,7 +84,11 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
 
     private void accessTheNetwork(final String message) throws IOException {
         if (randomGenerator.nextDouble() < failProbability) {
-            throw new IOException("Generic I/O error");
+            if (message == null) {
+                throw new NetworkException();
+            }
+
+            throw new NetworkException(message);
         }
     }
 
