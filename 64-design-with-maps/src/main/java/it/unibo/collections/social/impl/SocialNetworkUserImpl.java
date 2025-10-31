@@ -102,13 +102,13 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
         
         if (groupName == null) throw new IllegalArgumentException("groupName cannot be null");
         
-        return groupMap.getOrDefault(groupName, new HashSet<>());
+        return new HashSet<>(groupMap.getOrDefault(groupName, new HashSet<>()));
     }
 
     @Override
     public List<U> getFollowedUsers() {
         HashSet<U> follows = new HashSet<>();
-        
+
         for (var groupName : groupMap.keySet()) {
             var group = groupMap.get(groupName);
             if (group.contains(this)) {
