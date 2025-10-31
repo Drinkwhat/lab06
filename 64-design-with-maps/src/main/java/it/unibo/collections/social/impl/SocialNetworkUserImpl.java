@@ -26,7 +26,8 @@ import java.util.Set;
  *            Specific {@link User} type
  */
 public final class SocialNetworkUserImpl<U extends User> extends UserImpl implements SocialNetworkUser<U> {
-
+    
+    private Map<String, HashSet<U>> groupMap  = new HashMap<>();
     /*
      *
      * [FIELDS]
@@ -64,13 +65,16 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      *            application
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
-        super(null, null, null, 0);
+        super(name, surname, user, userAge);
     }
 
     /*
      * 2) Define a further constructor where the age defaults to -1
      */
 
+    public SocialNetworkUserImpl(final String name, final String surname, final String user) {
+        super(name, surname, user);
+    }
     /*
      * [METHODS]
      *
@@ -78,7 +82,14 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        
+        if (circle == null) throw new IllegalArgumentException("Circle cannot be null");
+        
+        if (user == null) throw new IllegalArgumentException("User cannot be null");
+        
+
+        groupMap.putIfAbsent(circle, new HashSet<>());
+        return groupMap.get(circle).add(user);
     }
 
     /**
@@ -88,11 +99,27 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+        
+        if (groupName == null) throw new IllegalArgumentException("groupName cannot be null");
+        
+        return groupMap.getOrDefault(groupName, new HashSet<>());
     }
 
     @Override
     public List<U> getFollowedUsers() {
-        return null;
+        HashSet<U> follows = new HashSet<>();
+        
+        for (var groupName : groupMap.keySet()) {
+            var group = groupMap.get(groupName);
+            if (group.contains(this)) {
+                for (U u : group) {
+                    if (u != this) {
+                        follows.add(u);
+                    }
+                }
+            };
+        }
+
+        return new ArrayList<>(follows);
     }
 }
