@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import it.unibo.generics.graph.api.Graph;
+import it.unibo.generics.graph.api.PathAlgorithm;
 
 public class GraphImpl<T> implements Graph<T> {
     private final Set<T> nodes = new HashSet<>();
@@ -44,9 +45,10 @@ public class GraphImpl<T> implements Graph<T> {
 
     @Override
     public List<T> getPath(T source, T target) {
-        
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPath'");
+        // PathAlgorithm<T> algorithm = new Bfs<>();
+        PathAlgorithm<T> algorithm = new Dfs<>();
+
+        return algorithm.getPath(this, source, target);
     }
     
 }
