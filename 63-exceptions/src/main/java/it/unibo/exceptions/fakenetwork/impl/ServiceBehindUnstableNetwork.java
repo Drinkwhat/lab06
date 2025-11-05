@@ -60,7 +60,7 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
             commandQueue.add(data);
         } else {
             final var message = data + " is not a valid keyword (allowed: " + KEYWORDS + "), nor is a number";
-            // System.out.println(message);
+            System.out.println(message);
             commandQueue.clear();
             /*
              * This method, in this point, should throw an IllegalStateException.
@@ -84,12 +84,8 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
     }
 
     private void accessTheNetwork(final String message) throws IOException {
-        if (randomGenerator.nextDouble() < failProbability) {
-            if (message == null) {
-                throw new NetworkException();
-            }
-
-            throw new NetworkException(message);
+        if (randomGenerator.nextDouble() < failProbability) {  
+            throw message == null ? new NetworkException() : new NetworkException(message);
         }
     }
 
